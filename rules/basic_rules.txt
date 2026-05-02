@@ -1,0 +1,5 @@
+capitalize
+append_1
+append_!
+replace_a_@
+replace_o_0
