@@ -39,9 +39,9 @@ This project is a custom-built password cracking tool designed to simulate real-
 ## 📂 Project Structure
 
 /hash-cracker
-│── wordlists/
-│── rules/
-│── src/
+│── wordlists/ → password lists used for attacks  
+│── rules/ → mutation rules (planned)
+│── src/ → core cracking logic 
 │── README.md
 
 ---
