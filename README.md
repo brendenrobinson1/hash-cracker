@@ -30,7 +30,7 @@ This project is a custom-built password cracking tool designed to simulate real-
 
 ## 🛠️ Technologies Used
 
-* Python / PHP (update based on your implementation)
+* Python
 * Hashing algorithms (MD5, SHA-1, SHA-256, etc.)
 * Command-line interface (CLI)
 
@@ -38,11 +38,14 @@ This project is a custom-built password cracking tool designed to simulate real-
 
 ## 📂 Project Structure
 
-/hash-cracker
-│── wordlists/
-│── rules/
-│── src/
-│── README.md
+## 📂 Project Structure
+
+```text
+hash-cracker/
+├── src/        # Core cracking logic
+├── wordlists/  # Password lists used for attacks
+├── rules/      # Mutation rules planned for future updates
+└── README.md
 
 ---
 
