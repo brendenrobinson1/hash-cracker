@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Password Cracker GUI</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Password Cracker GUI</h1>
+        <p class="subtitle">Local educational hash cracking tool</p>
+
+        <form method="POST" enctype="multipart/form-data">
+            <label>Hash</label>
+            <input type="text" name="hash" placeholder="Paste hash here">
+
+            <label>Hash Type</label>
+            <select name="type">
+                <option value="md5">MD5</option>
+                <option value="sha1">SHA1</option>
+                <option value="sha224">SHA224</option>
+                <option value="sha256">SHA256</option>
+                <option value="sha384">SHA384</option>
+                <option value="sha512">SHA512</option>
+            </select>
+
+            <label>Rule Strength Information</label>
+            <select name="rules" id="rules" onchange="updateRuleInfo()">
+                <option value="none">No Mutations</option>
+                <option value="light" selected>Light Rules</option>
+                <option value="medium">Medium Rules</option>
+                <option value="heavy">Heavy Rules</option>
+            </select>
+
+            <div id="rule-info" class="rule-info">
+                Light Rules: tries capitalization changes. Fast and simple.
+            </div>
+
+            <label>Wordlist File</label>
+            <input type="file" name="wordlist_file">
+
+            <button type="button" onclick="startCrack()">Start Cracking</button>
+        </form>
+
+        <div class="progress-container">
+            <div class="progress-bar" style="width: 0%;">0%</div>
+        </div>
+
+        <div id="stats-box" class="result" style="display: none;"></div>
+        <div id="result-box" class="result" style="display: none;"></div>
+    </div>
+
+    <div id="popup-message" class="popup hidden"></div>
+
+    <script>
+        let progressInterval = null;
+
+        function startCrack() {
+            const form = document.querySelector("form");
+            const formData = new FormData(form);
+
+            const resultBox = document.querySelector("#result-box");
+            const statsBox = document.querySelector("#stats-box");
+            const bar = document.querySelector(".progress-bar");
+            const popup = document.querySelector("#popup-message");
+
+            resultBox.style.display = "block";
+            statsBox.style.display = "block";
+
+            resultBox.innerHTML = "Cracking started...";
+            statsBox.innerHTML = "Attempts: 0 | Speed: 0 hashes/sec | Time: 0 sec";
+
+            bar.style.width = "0%";
+            bar.innerText = "Running...";
+
+            popup.className = "popup hidden";
+            popup.innerHTML = "";
+
+            fetch("/start", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    resultBox.innerHTML = data.error;
+                    bar.innerText = "Error";
+                    return;
+                }
+
+                updateProgress();
+            })
+            .catch(error => {
+                resultBox.innerHTML = "Error starting cracker.";
+                bar.innerText = "Error";
+            });
+        }
+
+        function updateProgress() {
+            if (progressInterval !== null) {
+                clearInterval(progressInterval);
+            }
+
+            progressInterval = setInterval(() => {
+                fetch("/status")
+                .then(response => response.json())
+                .then(data => {
+                    const bar = document.querySelector(".progress-bar");
+                    const resultBox = document.querySelector("#result-box");
+                    const statsBox = document.querySelector("#stats-box");
+                    const popup = document.querySelector("#popup-message");
+
+                    statsBox.innerHTML =
+                        "Attempts: " + data.attempts +
+                        " | Speed: " + data.speed + " hashes/sec" +
+                        " | Time: " + data.time + " sec";
+
+                    if (data.running) {
+                        bar.style.width = "50%";
+                        bar.innerText = "Running...";
+                    } else {
+                        clearInterval(progressInterval);
+                        progressInterval = null;
+
+                        bar.style.width = "100%";
+                        bar.innerText = "100%";
+
+                        if (data.found) {
+                            popup.className = "popup success";
+                            popup.innerHTML = "✅ Password Found: " + data.password;
+                            resultBox.innerHTML = "Password Found: " + data.password;
+                        } else {
+                            popup.className = "popup fail";
+                            popup.innerHTML = "❌ Password not found in wordlist.";
+                            resultBox.innerHTML = "Password not found.";
+                        }
+
+                        popup.classList.remove("hidden");
+                    }
+                });
+            }, 300);
+        }
+
+        function updateRuleInfo() {
+            const rule = document.querySelector("#rules").value;
+            const info = document.querySelector("#rule-info");
+
+            if (rule === "none") {
+                info.innerHTML = "No Mutations: tries only the exact words in the uploaded wordlist. Fastest option.";
+            } else if (rule === "light") {
+                info.innerHTML = "Light Rules: tries basic capitalization variations. Fast and simple.";
+            } else if (rule === "medium") {
+                info.innerHTML = "Medium Rules: adds leetspeak swaps and common endings. Stronger, but slower.";
+            } else if (rule === "heavy") {
+                info.innerHTML = "Heavy Rules: adds phrase joins, leetspeak, endings, and chained mutations. Slowest but strongest.";
+            }
+        }
+    </script>
+</body>
+</html>

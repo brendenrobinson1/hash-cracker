@@ -1,0 +1,114 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111827;
+    color: #f9fafb;
+}
+
+.container {
+    width: 90%;
+    max-width: 700px;
+    margin: 60px auto;
+    background: #1f2937;
+    padding: 30px;
+    border-radius: 14px;
+}
+
+h1 {
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: #9ca3af;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 6px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    box-sizing: border-box;
+}
+
+button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.result {
+    margin-top: 25px;
+    padding: 20px;
+    background: #111827;
+    border-radius: 10px;
+}
+
+.error {
+    margin-top: 20px;
+    padding: 15px;
+    background: #7f1d1d;
+    border-radius: 8px;
+}
+
+.progress-container {
+    width: 100%;
+    background: #374151;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-weight: bold;
+    background: #22c55e;
+    color: #111827;
+    transition: width 0.3s ease;
+}
+
+.rule-info {
+    margin-top: 8px;
+    padding: 12px;
+    background: #111827;
+    border-left: 4px solid #22c55e;
+    border-radius: 8px;
+    color: #d1d5db;
+    font-size: 0.95rem;
+}
+
+.popup {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.popup.success {
+    background: #14532d;
+    color: #bbf7d0;
+}
+
+.popup.fail {
+    background: #7f1d1d;
+    color: #fecaca;
+}
+
+.hidden {
+    display: none;
+}
