@@ -57,7 +57,9 @@ def crack_hash(target_hash, algorithm, wordlist_path, rules="light", status=None
         for word in file:
             mutations = mutate_word(word, rules)
 
-            for password in mutations:
+            for i, password in enumerate(mutations):
+                if i > 10000:  # limit attempts per word
+                    break
                 attempts += 1
 
                 hashed_attempt = hash_password(password, algorithm)
@@ -67,7 +69,9 @@ def crack_hash(target_hash, algorithm, wordlist_path, rules="light", status=None
 
                 if status is not None:
                     status["attempts"] = attempts
-                    status["progress"] = 0
+                    status["progress"] = int((attempts / 100000) * 100)
+                    if status["progress"] > 100:
+                        status["progress"] = 100
                     status["time"] = round(elapsed, 2)
                     status["speed"] = round(speed, 2)
 
